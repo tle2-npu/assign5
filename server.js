@@ -6,6 +6,26 @@ const PORT = 3000;
 // Middleware to parse JSON
 app.use(express.json());
 
+// Custom logging middleware
+const requestLogger = (req, res, next) => {
+    const timestamp = new Date().toISOString();
+
+    console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
+
+    // Log request body for POST and PUT requests
+    if (req.method === 'POST' || req.method === 'PUT') {
+        console.log(
+            'Request Body:',
+            JSON.stringify(req.body, null, 2)
+        );
+    }
+
+    next(); // Pass control to next middleware
+};
+
+// Apply middleware globally
+app.use(requestLogger);
+
 // Data for the server
 const menuItems = [
   {
